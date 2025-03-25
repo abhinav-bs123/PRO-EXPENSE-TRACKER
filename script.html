@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Tracker Pro</title>
+    <link rel="stylesheet" href="script.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Auth Container -->
+    <div id="authContainer" class="container">
+        <div class="auth-box">
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="login">Login</button>
+                <button class="tab-btn" data-tab="register">Register</button>
+            </div>
+            
+            <!-- Login Form -->
+            <form id="loginForm" class="auth-form">
+                <h2>Welcome Back!</h2>
+                <div class="form-group">
+                    <label for="loginEmail">Email Address</label>
+                    <input type="email" id="loginEmail" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" placeholder="Enter your password" required>
+                </div>
+                <button type="submit" class="btn-primary">Sign In</button>
+            </form>
+
+            <!-- Register Form -->
+            <form id="registerForm" class="auth-form hidden">
+                <h2>Create Account</h2>
+                <div class="form-group">
+                    <label for="registerName">Full Name</label>
+                    <input type="text" id="registerName" placeholder="Enter your name" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerEmail">Email Address</label>
+                    <input type="email" id="registerEmail" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerPassword">Password</label>
+                    <input type="password" id="registerPassword" placeholder="Create a password" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" id="confirmPassword" placeholder="Confirm your password" required>
+                </div>
+                <button type="submit" class="btn-primary">Create Account</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Dashboard Container -->
+    <div id="dashboardContainer" class="container hidden">
+        <nav class="dashboard-nav">
+            <div class="dashboard-nav-left">
+                <h1>Expense Tracker</h1>
+                <div class="user-profile">
+                    <div class="user-avatar"></div>
+                    <div class="user-info">
+                        <span class="user-name">User Name</span>
+                        <span class="user-email">user@example.com</span>
+                    </div>
+                </div>
+            </div>
+            <button id="logoutBtn" class="btn-secondary">Logout</button>
+        </nav>
+        
+        <div class="dashboard-grid">
+            <!-- Month Selection -->
+            <div class="month-selection-section">
+                <div class="month-selector">
+                    <label for="monthSelector">View Previous Months</label>
+                    <select id="monthSelector">
+                        <!-- Will be populated dynamically -->
+                    </select>
+                </div>
+            </div>
+
+            <!-- Monthly Credit Section -->
+            <div class="monthly-credit-section">
+                <div class="credit-card">
+                    <h3>Monthly Credit</h3>
+                    <div class="credit-amount" id="monthlyCredit">₹0</div>
+                    <div class="credit-info">Set your monthly budget</div>
+                    <div class="form-group" style="margin-top: 1rem;">
+                        <input type="number" id="creditAmount" placeholder="Enter amount" min="0" step="100">
+                        <button id="setCreditBtn" class="btn-primary" style="width: 100%; margin-top: 0.5rem;">Set Credit</button>
+                    </div>
+                </div>
+                <div class="credit-card">
+                    <h3>Current Month Expenses</h3>
+                    <div class="credit-amount" id="currentExpenses">₹0</div>
+                    <div class="credit-info">Spent from monthly credit</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="expenseProgress" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div class="credit-card">
+                    <h3>Remaining Balance</h3>
+                    <div class="credit-amount" id="remainingBalance">₹0</div>
+                    <div class="credit-info">Left to spend this month</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="balanceProgress" style="width: 100%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Daily Limit Section -->
+            <div class="daily-limit-section">
+                <div class="form-group daily-limit-input">
+                    <label for="dailyLimit">Daily Expense Limit</label>
+                    <input type="number" id="dailyLimit" placeholder="Set daily limit" min="0" step="100">
+                </div>
+                <button id="setLimitBtn" class="btn-primary">Set Limit</button>
+                <div id="limitStatus" class="daily-limit-status"></div>
+            </div>
+
+            <!-- Add Expense Form -->
+            <div class="card expense-form-card">
+                <h2>Add New Expense</h2>
+                <form id="expenseForm">
+                    <div class="form-group">
+                        <label for="expenseTitle">Title</label>
+                        <input type="text" id="expenseTitle" placeholder="What did you spend on?" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="expenseAmount">Amount</label>
+                        <input type="number" id="expenseAmount" placeholder="How much?" min="0" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="expenseCategory">Category</label>
+                        <select id="expenseCategory" required>
+                            <option value="">Select a category</option>
+                            <option value="food">Food & Dining</option>
+                            <option value="transport">Transportation</option>
+                            <option value="utilities">Bills & Utilities</option>
+                            <option value="entertainment">Entertainment</option>
+                            <option value="shopping">Shopping</option>
+                            <option value="health">Healthcare</option>
+                            <option value="others">Others</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="expenseDate">Date</label>
+                        <input type="date" id="expenseDate" required>
+                    </div>
+                    <button type="submit" class="btn-primary">Add Expense</button>
+                </form>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="card chart-card">
+                <h2>Monthly Comparison</h2>
+                <div class="chart-wrapper">
+                    <canvas id="monthlyComparisonChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="card chart-card">
+                <h2>Category Distribution</h2>
+                <div class="chart-wrapper">
+                    <canvas id="categoryChart"></canvas>
+                </div>
+            </div>
+
+            <div class="card chart-card">
+                <h2>Daily Expenses</h2>
+                <div class="chart-wrapper">
+                    <canvas id="dailyChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Recent Expenses -->
+            <div class="card expense-list-card">
+                <h2>Recent Expenses</h2>
+                <div class="expense-list" id="expenseList"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html> 
